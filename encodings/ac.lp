@@ -1,13 +1,54 @@
-%Count attackers/supporters
-lcount(NODE,L,NUMBER) :- s(NODE,_), NUMBER = #count{I:supports(I,NODE)},plus(L).
-lcount(NODE,L,NUMBER) :- s(NODE,_), NUMBER = #count{I:attacks(I,NODE)},minus(L).
+%#l sem
+alcount(NODE,L,NUMBER) :- s(NODE,_),activelabelcount(NODE,L), NUMBER = #count{I:activeedge(I,NODE,L)}.
 
-attacks(X,Y) :- e(X,Y,"-"), in(X).
-supports(X,Y):- e(X,Y,"+"), in(X).
+activeedge(X,Y,I) :- e(X,Y,I), in(X).
+
+%#(t)l semantics
+lcount(NODE,L,NUMBER) :- s(NODE,_), labelcount(NODE,L), NUMBER = #count{I:e(I,NODE,L).
+
+
+%min semantics
+minalabel(NODE,NUMBER) :- s(Node,_), minactivelabel(NODE), NUMBER= #min{I:activeedge(_,NODE,I)}.
+
+%min(t) semantics
+
+mintlabel(NODE,NUMBER) :- s(NODE,_), minlabel(NODE), NUMBER= #min{I:e(_,NODE,I)}.
+
+%max semantics
+maxalabel(NODE,NUMBER) :- s(Node,_), maxactivelabel(NODE), NUMBER= #max{I:activeedge(_,NODE,I)}.
+
+%max(t) semantics
+
+maxtlabel(NODE,NUMBER) :- s(NODE,_), maxlabel(NODE), NUMBER= #max{I:e(_,NODE,I)}.
+
+%sum semantics
+sumalabel(NODE,NUMBER) :- s(Node,_), sumactivelabel(NODE), NUMBER= #sum{I:activeedge(_,NODE,I)}.
+
+%sum(t) semantics
+
+sumtlabel(NODE,NUMBER) :- s(NODE,_), sumlabel(NODE), NUMBER= #sum{I:e(_,NODE,I)}.
+
+%count semantics
+activeedgegt0(X,Y,I) :- e(X,Y,I),in(X),I>0.
+egt0(X,Y,I) :- e(X,Y,I), I>0.
+
+countagt0(NODE,NUMBER) :- s(NODE,_), countactivegt0(NODE), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
+counttgt0(NODE,NUMBER) :- s(NODE,_), countgt0(NODE), NUMBER=#count{I:egt0(_,NODE,I).
 
 %Calculate value of a term
 mterm(X,Y):- term(X,M,I), Y=M*I, num(I).
+mterm(X,Y):- term(X,M,I), I==activelabelcount(J,K), alcount(J,K,NUMBER), Y=M*NUMBER.
 mterm(X,Y):- term(X,M,I), I==labelcount(J,K), lcount(J,K,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==minactivelabel(J), minalabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==minlabel(J), mintlabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==maxactivelabel(J), maxalabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==maxlabel(J), maxtlabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==sumactivelabel(J), sumalabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==sumlabel(J), sumtlabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==countactivegt0(J), countagt0(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==countgt0(J), counttgt0(J,NUMBER), Y=M*NUMBER.
+
+
 
 %Value of the lefthandside of a pattern
 lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, label(X).

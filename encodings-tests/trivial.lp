@@ -23,5 +23,3 @@ term(a1,1,labelcount(a,"-")).
 term(b1,1,labelcount(b,"-")).
 
 eq("==").
-minus("-").
-plus("+").
