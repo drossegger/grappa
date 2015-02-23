@@ -1,39 +1,39 @@
 %#l sem
-alcount(NODE,L,NUMBER) :- s(NODE,_),activelabelcount(NODE,L), NUMBER = #count{I:activeedge(I,NODE,L)}.
+alcount(NODE,L,NUMBER) :- s(NODE,_),term(_,_,activelabelcount(NODE,L)), NUMBER = #count{I:activeedge(I,NODE,L)}.
 
 activeedge(X,Y,I) :- e(X,Y,I), in(X).
 
 %#(t)l semantics
-lcount(NODE,L,NUMBER) :- s(NODE,_), labelcount(NODE,L), NUMBER = #count{I:e(I,NODE,L).
+lcount(NODE,L,NUMBER) :- s(NODE,_), term(_,_,labelcount(NODE,L)), NUMBER = #count{I:e(I,NODE,L)}.
 
 
 %min semantics
-minalabel(NODE,NUMBER) :- s(Node,_), minactivelabel(NODE), NUMBER= #min{I:activeedge(_,NODE,I)}.
+minalabel(NODE,NUMBER) :- s(Node,_), term(_,_,minactivelabel(NODE)), NUMBER= #min{I:activeedge(_,NODE,I)}.
 
 %min(t) semantics
 
-mintlabel(NODE,NUMBER) :- s(NODE,_), minlabel(NODE), NUMBER= #min{I:e(_,NODE,I)}.
+mintlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minlabel(NODE)), NUMBER= #min{I:e(_,NODE,I)}.
 
 %max semantics
-maxalabel(NODE,NUMBER) :- s(Node,_), maxactivelabel(NODE), NUMBER= #max{I:activeedge(_,NODE,I)}.
+maxalabel(NODE,NUMBER) :- s(Node,_), term(_,_,maxactivelabel(NODE)), NUMBER= #max{I:activeedge(_,NODE,I)}.
 
 %max(t) semantics
 
-maxtlabel(NODE,NUMBER) :- s(NODE,_), maxlabel(NODE), NUMBER= #max{I:e(_,NODE,I)}.
+maxtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxlabel(NODE)), NUMBER= #max{I:e(_,NODE,I)}.
 
 %sum semantics
-sumalabel(NODE,NUMBER) :- s(Node,_), sumactivelabel(NODE), NUMBER= #sum{I:activeedge(_,NODE,I)}.
+sumalabel(NODE,NUMBER) :- s(Node,_), term(_,_,sumactivelabel(NODE)), NUMBER= #sum{I:activeedge(_,NODE,I)}.
 
 %sum(t) semantics
 
-sumtlabel(NODE,NUMBER) :- s(NODE,_), sumlabel(NODE), NUMBER= #sum{I:e(_,NODE,I)}.
+sumtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumlabel(NODE)), NUMBER= #sum{I:e(_,NODE,I)}.
 
 %count semantics
 activeedgegt0(X,Y,I) :- e(X,Y,I),in(X),I>0.
 egt0(X,Y,I) :- e(X,Y,I), I>0.
 
-countagt0(NODE,NUMBER) :- s(NODE,_), countactivegt0(NODE), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
-counttgt0(NODE,NUMBER) :- s(NODE,_), countgt0(NODE), NUMBER=#count{I:egt0(_,NODE,I).
+countagt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countactivegt0(NODE)), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
+counttgt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countgt0(NODE)), NUMBER=#count{I:egt0(_,NODE,I)}.
 
 %Calculate value of a term
 mterm(X,Y):- term(X,M,I), Y=M*I, num(I).
