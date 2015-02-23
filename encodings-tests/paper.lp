@@ -1,3 +1,4 @@
+%execute: -n0 encodings/ac.lp encodings/model.lp encodings-tests/paper.lp
 #show in/1.
 s(a,and(basicpattern(a1,"==",0),basicpattern(a2,"==",0))).
 s(b,and(basicpattern(b1,"==",0),basicpattern(b2,"==",0))).
