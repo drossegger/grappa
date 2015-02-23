@@ -49,9 +49,8 @@ mterm(X,Y):- term(X,M,I), I==countactivegt0(J), countagt0(J,NUMBER), Y=M*NUMBER.
 mterm(X,Y):- term(X,M,I), I==countgt0(J), counttgt0(J,NUMBER), Y=M*NUMBER.
 
 
-
 %Value of the lefthandside of a pattern
-lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, label(X).
+lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, rhs(X,_).
 
 %Can be concluded if a bp is correct.
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), geq(R), I>=A,rhs(L,A).
