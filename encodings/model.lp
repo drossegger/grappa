@@ -1,3 +1,4 @@
+%complexity issue because of disj. rule?
 in(X) | -in(X) :- s(X,_).
 
 in(X) :- accept(X).

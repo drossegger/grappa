@@ -1,40 +1,45 @@
+%
+% Semantics of Def. 8, Grappa Paper.
+%
+% An edge is active if its origin is in.
+activeedge(X,Y,I) :- e(X,Y,I), in(X).
+
 %#l sem
 alcount(NODE,L,NUMBER) :- s(NODE,_),term(_,_,activelabelcount(NODE,L)), NUMBER = #count{I:activeedge(I,NODE,L)}.
 
-activeedge(X,Y,I) :- e(X,Y,I), in(X).
-
 %#(t)l semantics
 lcount(NODE,L,NUMBER) :- s(NODE,_), term(_,_,labelcount(NODE,L)), NUMBER = #count{I:e(I,NODE,L)}.
-
 
 %min semantics
 minalabel(NODE,NUMBER) :- s(Node,_), term(_,_,minactivelabel(NODE)), NUMBER= #min{I:activeedge(_,NODE,I)}.
 
 %min(t) semantics
-
 mintlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minlabel(NODE)), NUMBER= #min{I:e(_,NODE,I)}.
 
 %max semantics
 maxalabel(NODE,NUMBER) :- s(Node,_), term(_,_,maxactivelabel(NODE)), NUMBER= #max{I:activeedge(_,NODE,I)}.
 
 %max(t) semantics
-
 maxtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxlabel(NODE)), NUMBER= #max{I:e(_,NODE,I)}.
 
 %sum semantics
 sumalabel(NODE,NUMBER) :- s(Node,_), term(_,_,sumactivelabel(NODE)), NUMBER= #sum{I:activeedge(_,NODE,I)}.
 
 %sum(t) semantics
-
 sumtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumlabel(NODE)), NUMBER= #sum{I:e(_,NODE,I)}.
 
 %count semantics
-activeedgegt0(X,Y,I) :- e(X,Y,I),in(X),I>0.
+%egt0/3 if the label of an edge is >0, undefined for non numerical values.
 egt0(X,Y,I) :- e(X,Y,I), I>0.
+%egt0/3 and origin is in 
+activeedgegt0(X,Y,I) :- egt0(X,Y,I),in(X).
 
 countagt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countactivegt0(NODE)), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
 counttgt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countgt0(NODE)), NUMBER=#count{I:egt0(_,NODE,I)}.
 
+%
+% Calculating basic patterns
+%
 %Calculate value of a term
 mterm(X,Y):- term(X,M,I), Y=M*I, num(I).
 mterm(X,Y):- term(X,M,I), I==activelabelcount(J,K), alcount(J,K,NUMBER), Y=M*NUMBER.
@@ -52,7 +57,11 @@ mterm(X,Y):- term(X,M,I), I==countgt0(J), counttgt0(J,NUMBER), Y=M*NUMBER.
 %Value of the lefthandside of a pattern
 lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, rhs(X,_).
 
-%Can be concluded if a bp is correct.
+%
+%Model Checking
+%
+
+%true/1 if a basicpattern is correct.
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), geq(R), I>=A,rhs(L,A).
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), leq(R), I<=A,rhs(L,A).
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), eq(R), I==A, rhs(L,A).
@@ -86,8 +95,10 @@ nomodel(X) :- pattern(X;X1;X2), X=or(X1,X2), nomodel(X1), nomodel(X2).
 nomodel(X) :- pattern(X;X1;X2), X=xor(X1,X2), nomodel(X1), nomodel(X2).
 nomodel(X) :- pattern(X;X1;X2), X=xor(X1,X2), ismodel(X1), ismodel(X2).
 
+%
+% Boolean Combinations of Basic Pattern
+%
 
-%Work in progress
 pattern(P) :- s(X,P).
 pattern(P) :- pattern(and(P,_)).
 pattern(P) :- pattern(and(_,P)).
