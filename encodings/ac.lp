@@ -11,19 +11,19 @@ alcount(NODE,L,NUMBER) :- s(NODE,_),term(_,_,activelabelcount(NODE,L)), NUMBER =
 lcount(NODE,L,NUMBER) :- s(NODE,_), term(_,_,labelcount(NODE,L)), NUMBER = #count{I:e(I,NODE,L)}.
 
 %min semantics
-minalabel(NODE,NUMBER) :- s(Node,_), term(_,_,minactivelabel(NODE)), NUMBER= #min{I:activeedge(_,NODE,I)}.
+minalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minactivelabel(NODE)), NUMBER= #min{I:activeedge(_,NODE,I)}.
 
 %min(t) semantics
 mintlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minlabel(NODE)), NUMBER= #min{I:e(_,NODE,I)}.
 
 %max semantics
-maxalabel(NODE,NUMBER) :- s(Node,_), term(_,_,maxactivelabel(NODE)), NUMBER= #max{I:activeedge(_,NODE,I)}.
+maxalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxactivelabel(NODE)), NUMBER= #max{I:activeedge(_,NODE,I)}.
 
 %max(t) semantics
 maxtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxlabel(NODE)), NUMBER= #max{I:e(_,NODE,I)}.
 
 %sum semantics
-sumalabel(NODE,NUMBER) :- s(Node,_), term(_,_,sumactivelabel(NODE)), NUMBER= #sum{I:activeedge(_,NODE,I)}.
+sumalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumactivelabel(NODE)), NUMBER= #sum{I:activeedge(_,NODE,I)}.
 
 %sum(t) semantics
 sumtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumlabel(NODE)), NUMBER= #sum{I:e(_,NODE,I)}.
@@ -31,7 +31,7 @@ sumtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumlabel(NODE)), NUMBER= #sum{I:e(
 %count semantics
 %egt0/3 if the label of an edge is >0, undefined for non numerical values.
 egt0(X,Y,I) :- e(X,Y,I), I>0.
-%egt0/3 and origin is in 
+%egt0/3 and origin is in
 activeedgegt0(X,Y,I) :- egt0(X,Y,I),in(X).
 
 countagt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countactivegt0(NODE)), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
