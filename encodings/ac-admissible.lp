@@ -2,7 +2,7 @@
 % Semantics of Def. 8, Grappa Paper.
 %
 % An edge is active if its origin is in.
-activeedge(X,Y,I,LABEL) :- e(X,Y,LABEL), in(X),iteration(I).
+activeedge(X,Y,I,LABEL) :- e(X,Y,LABEL), in(X,I),iteration(I).
 
 %#l sem
 alcount(NODE,L,I,NUMBER) :- s(NODE,_),term(_,_,activelabelcount(NODE,L)),iteration(I), NUMBER = #count{J:activeedge(J,NODE,I,L)}.
