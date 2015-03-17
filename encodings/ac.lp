@@ -55,29 +55,29 @@ mterm(X,Y):- term(X,M,I), I==countgt0(J), counttgt0(J,NUMBER), Y=M*NUMBER.
 
 
 %Value of the lefthandside of a pattern
-lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, rhs(X,_).
+lhspat(X,Y) :-  Y = #sum {I:mterm(X,I)}, basicpattern(X,_,_).
 
 %
 %Model Checking
 %
 
 %true/1 if a basicpattern is correct.
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), geq(R), I>=A,rhs(L,A).
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), leq(R), I<=A,rhs(L,A).
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), eq(R), I==A, rhs(L,A).
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), neq(R), I!=A,rhs(L,A).
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), gt(R), I>A,  rhs(L,A).
-true(X) :- X=basicpattern(L,R,A), lhspat(L,I), lt(R), I<A,  rhs(L,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), geq(R), I>=A,basicpattern(L,R,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), leq(R), I<=A,basicpattern(L,R,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), eq(R), I==A, basicpattern(L,R,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), neq(R), I!=A,basicpattern(L,R,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), gt(R), I>A,  basicpattern(L,R,A).
+true(X) :- X=basicpattern(L,R,A), lhspat(L,I), lt(R), I<A,  basicpattern(L,R,A).
 
 accept(X) :- s(X,I), ismodel(I).
 
 false(X) :- atom(X), not true(X).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), geq(R).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), leq(R).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), eq(R).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), neq(R).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), gt(R).
-atom(X) :- X=basicpattern(L,R,A), rhs(L,A), lt(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), geq(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), leq(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), eq(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), neq(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), gt(R).
+atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), lt(R).
 
 ismodel(X) :- pattern(X), true(X).
 ismodel(X) :- pattern(X;X1), X=neg(X1), nomodel(X1).
@@ -98,6 +98,7 @@ nomodel(X) :- pattern(X;X1;X2), X=xor(X1,X2), ismodel(X1), ismodel(X2).
 %
 % Boolean Combinations of Basic Pattern
 %
+basicpattern(L,R,A) :- pattern(basicpattern(L,R,A)).
 
 pattern(P) :- s(X,P).
 pattern(P) :- pattern(and(P,_)).
