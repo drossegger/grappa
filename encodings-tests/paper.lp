@@ -1,5 +1,5 @@
 #show in/1.
-#show -in/1.
+#show out/1.
 %execute: -n0 encodings/ac.lp encodings/model.lp encodings-tests/paper.lp
 %argument definition. s(argumentname, acceptance condition).
 s(a,and(basicpattern(a1,"==",0),basicpattern(a2,"==",0))).

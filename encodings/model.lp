@@ -1,5 +1,5 @@
 %complexity issue because of disj. rule?
-in(X) | -in(X) :- s(X,_).
+in(X) | out(X) :- s(X,_).
 
-:- accept(X), -in(X).
+:- accept(X), out(X).
 :- not accept(X),in(X). 
