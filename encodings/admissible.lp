@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 % Candidate Guess
 %%%%%%%%%%%%%%%%%%%%%%%
-in(S) | out(S) | undec(S) :- s(S,_).
+in(S) | out(S) | undec(S) :- s(S).
 
 %An argument is selected if it is in or out
 select(S) :- in(S).
@@ -25,13 +25,8 @@ ok(X) :- select(X), accept(X,X).
 in2(S,X) :- ok(S), undec(X).
 out2(S,X) :- ok(S), undec(X).
 
-activeedge(S,X,S,L) :- e(X,S,L), ok(S),undec(X).
+true(S,p1) :- ok(S).
+false(S,p1) :- ok(S).
+true(S,p2) :- ok(S).
+false(S,p2) :- ok(S).
 
-alcount(S,S,L,0) :- ok(S),term(_,_,activelabelcount(S,L)).
-alcount(S,S,L,I) :- ok(S),term(_,_,activelabelcount(S,L)), I=J+1, alcount(S,S,L,J), I<=MAX, lcount(S,L,MAX).
-
-num(0..20).
-lhspat(S,X,I) :- num(I), ok(S), basicpattern(S,X,_,_).
-
-%true(S,X) :- ok(S),X=basicpattern(S,L,R,A),basicpattern(S,L,R,A).
-%false(S,X) :- ok(S), X=basicpattern(S,L,R,A), basicpattern(S,L,R,A).
