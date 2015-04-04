@@ -6,9 +6,6 @@
 %#show helper/2.
 %#show helperinact/2.
 
-
-%execute: -n0 encodings/ac.lp encodings/model.lp encodings-tests/paper.lp
-%argument definition. s(argumentname, acceptance condition).
 s(a).
 s(b).
 s(c).
