@@ -1,41 +1,38 @@
 %
-% Semantics of Def. 8, Grappa Paper.
+% Def. 8, Grappa Paper.
 %
 % An edge is active if its origin is in.
 activeedge(X,Y,I) :- e(X,Y,I), in(X).
 
-%#l sem
+%#l
 alcount(NODE,L,NUMBER) :- s(NODE,_),term(_,_,activelabelcount(NODE,L)), NUMBER = #count{I:activeedge(I,NODE,L)}.
 
-%#(t)l semantics
+%#(t)l 
 lcount(NODE,L,NUMBER) :- s(NODE,_), term(_,_,labelcount(NODE,L)), NUMBER = #count{I:e(I,NODE,L)}.
 
-%min semantics
+%min
 minalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minactivelabel(NODE)), NUMBER= #min{I:activeedge(_,NODE,I)}.
 
-%min(t) semantics
+%min(t) 
 mintlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,minlabel(NODE)), NUMBER= #min{I:e(_,NODE,I)}.
 
-%max semantics
+%max 
 maxalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxactivelabel(NODE)), NUMBER= #max{I:activeedge(_,NODE,I)}.
 
-%max(t) semantics
+%max(t)
 maxtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,maxlabel(NODE)), NUMBER= #max{I:e(_,NODE,I)}.
 
-%sum semantics
+%sum
 sumalabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumactivelabel(NODE)), NUMBER= #sum{I:activeedge(_,NODE,I)}.
 
-%sum(t) semantics
+%sum(t)
 sumtlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,sumlabel(NODE)), NUMBER= #sum{I:e(_,NODE,I)}.
 
-%count semantics
-%egt0/3 if the label of an edge is >0, undefined for non numerical values.
-egt0(X,Y,I) :- e(X,Y,I), I>0.
-%egt0/3 and origin is in
-activeedgegt0(X,Y,I) :- egt0(X,Y,I),in(X).
-
-countagt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countactivegt0(NODE)), NUMBER=#count{I:activeedgegt0(_,NODE,I)}.
-counttgt0(NODE,NUMBER) :- s(NODE,_), term(_,_,countgt0(NODE)), NUMBER=#count{I:egt0(_,NODE,I)}.
+%distinctlabels 
+label(X,L) :- e(_, X, L).
+activelabel(X,L) :- activeedge(_,X,L).
+distactivelabel(NODE,NUMBER) :- s(NODE,_), term(_,_,distinctactivelabel(NODE)), NUMBER=#count{I:activelabel(NODE,I)}.
+distlabel(NODE,NUMBER) :- s(NODE,_), term(_,_,distinctlabel(NODE)), NUMBER=#count{I:label(NODE,I)}.
 
 %
 % Calculating basic patterns
@@ -50,8 +47,8 @@ mterm(X,Y):- term(X,M,I), I==maxactivelabel(J), maxalabel(J,NUMBER), Y=M*NUMBER.
 mterm(X,Y):- term(X,M,I), I==maxlabel(J), maxtlabel(J,NUMBER), Y=M*NUMBER.
 mterm(X,Y):- term(X,M,I), I==sumactivelabel(J), sumalabel(J,NUMBER), Y=M*NUMBER.
 mterm(X,Y):- term(X,M,I), I==sumlabel(J), sumtlabel(J,NUMBER), Y=M*NUMBER.
-mterm(X,Y):- term(X,M,I), I==countactivegt0(J), countagt0(J,NUMBER), Y=M*NUMBER.
-mterm(X,Y):- term(X,M,I), I==countgt0(J), counttgt0(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==distinctactivelabel(J), distactivelabel(J,NUMBER), Y=M*NUMBER.
+mterm(X,Y):- term(X,M,I), I==distinctlabel(J), distlabel(J,NUMBER), Y=M*NUMBER.
 
 
 %Value of the lefthandside of a pattern
@@ -69,9 +66,15 @@ true(X) :- X=basicpattern(L,R,A), lhspat(L,I), neq(R), I!=A,basicpattern(L,R,A).
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), gt(R), I>A,  basicpattern(L,R,A).
 true(X) :- X=basicpattern(L,R,A), lhspat(L,I), lt(R), I<A,  basicpattern(L,R,A).
 
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), geq(R), I<A,  basicpattern(L,R,A).
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), leq(R), I>A,  basicpattern(L,R,A).
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), eq(R), I!=A,  basicpattern(L,R,A).
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), neq(R), I==A, basicpattern(L,R,A).
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), gt(R), I<=A,  basicpattern(L,R,A).
+false(X) :- X=basicpattern(L,R,A), lhspat(L,I), lt(R), I>=A,  basicpattern(L,R,A).
+
 accept(X) :- s(X,I), ismodel(I).
 
-false(X) :- atom(X), not true(X).
 atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), geq(R).
 atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), leq(R).
 atom(X) :- X=basicpattern(L,R,A), basicpattern(L,R,A), eq(R).
